@@ -56,8 +56,9 @@ def parse_csv(csvFilePath) -> List[Session]:
         #convert each csv row to python dict
         for row in csvReader:
             #add row to json array
-            s = Session(row['Charging Station ID'], row['Serial'], row['RFID Card'], row['Status'], row['Start'], row['End'], row['Duration'], row['Meter at start (Wh)'], row['Meter at end (Wh)'], row['Consumption'])
-            sessions.append(s)
+            if row['Status'] == "CLOSED":
+                s = Session(row['Charging Station ID'], row['Serial'], row['RFID Card'], row['Status'], row['Start'], row['End'], row['Duration'], row['Meter at start (Wh)'], row['Meter at end (Wh)'], row['Consumption'])
+                sessions.append(s)
     return sessions
 
 if __name__ == "__main__":
