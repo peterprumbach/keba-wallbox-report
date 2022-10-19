@@ -12,6 +12,12 @@
             table {
                 border-bottom: 1px solid black;
             }
+            .information {
+                margin-bottom: 2em;
+            }
+            .informationhl {
+                font-weight: bold;
+            }
             .summary {
                 width: auto;
                 margin-top: 2em;
@@ -59,7 +65,26 @@
                 </tr>
             </thead>
             <tbody>
-
+                <tr>
+                    <td class="informationhl">Fahrzeug</td>
+                    <td></td>
+                </tr>
+                </tr>
+                    <td class="informationhl">Wallbox Hersteller</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="informationhl">Wallbox Seriennummer</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="informationhl">Wallbox Standort</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="informationhl">Mitarbeiter</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
 
@@ -105,13 +130,20 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="summarytext">Gesamtverbrauch:</td>
-                    <td class="summarytext nums">{{ consumption }}</td>
-                    <td class="summarytext">kWh</td>
+                    <td class="summarytext">Gesamtverbrauch im Abrechnungsmonat {{ date.strftime('%B %Y') }}:</td>
+                    <td class="summarytext nums">{{ "{0:n}".format(consumption | round(2)) }} kWh</td>
                 </tr>
                 <tr>
-                    <td class="summarytext">Gesamtkosten</td>
-                    <td class="summarytext nums">{{ costs }}</td>
+                    <td>Stromkosten {{ "{0:n}".format(electricity_rate) }} EUR/kWh x {{ "{0:n}".format(consumption | round(2)) }}:</td>
+                    <td>{{ "{0:n}".format((electricity_rate * consumption) | round(2)) }} EUR</td>
+                </tr>
+                <tr>
+                    <td>Anteiliger Grundpreis:</td>
+                    <td>{{ "{0:n}".format(electricity_basic_price) }} EUR</td>
+                </tr>
+                <tr>
+                    <td class="summarytext">Abrechnungsbetrag {{ date.strftime('%B %Y') }}</td>
+                    <td class="summarytext">{{ "{0:n}".format(((consumption*electricity_rate)+electricity_basic_price) | round(2)) }} EUR</td>
                 </tr>
             </tbody>
         </table>

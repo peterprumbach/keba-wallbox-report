@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from typing import List
 from session import Session
 from jinja2 import Environment, FileSystemLoader
+from decimal import Decimal
 
 NOW=datetime.now()
 
@@ -22,7 +23,7 @@ def main():
     consumption = sum(consumption)
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('report.html.j2')
-    html = template.render(sessions=sessions, date=NOW, consumption=consumption)
+    html = template.render(sessions=sessions, date=NOW, consumption=consumption, electricity_rate=Decimal(os.environ.get('electricity_rate')), electricity_basic_price=Decimal(os.environ.get('electricity_basic_price')))
 
     with open('report.html', 'w') as f:
         f.write(html)
