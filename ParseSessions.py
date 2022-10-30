@@ -10,8 +10,6 @@ from session import Session
 from jinja2 import Environment, FileSystemLoader
 from decimal import Decimal
 
-NOW=datetime.now()
-
 def main():
     load_dotenv()
     download_data()
@@ -23,14 +21,22 @@ def main():
     consumption = sum(consumption)
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('report.html.j2')
-    html = template.render(sessions=sessions, date=NOW, consumption=consumption, electricity_rate=Decimal(os.environ.get('electricity_rate')), electricity_basic_price=Decimal(os.environ.get('electricity_basic_price')))
+    html = template.render(sessions=sessions, date=prev_month(), consumption=consumption, electricity_rate=Decimal(os.environ.get('electricity_rate')), electricity_basic_price=Decimal(os.environ.get('electricity_basic_price')))
 
     with open('report.html', 'w') as f:
         f.write(html)
-        
 
 def date_filter(x: Session):
-    return x.end.year == NOW.year and x.end.month == NOW.month
+    return x.end.year == prev_month().year and x.end.month == prev_month().month
+
+def prev_month(date=datetime.today()):
+    if date.month == 1:
+        return date.replace(month=12,year=date.year-1)
+    else:
+        try:
+            return date.replace(month=date.month-1)
+        except ValueError:
+            return prev_month(date=date.replace(day=date.day-1))
 
 def download_data():
     url = 'http://{}/ajax.php'.format(os.environ.get('webui_ip'))
