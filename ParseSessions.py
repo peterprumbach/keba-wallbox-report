@@ -64,7 +64,7 @@ def parse_csv(csvFilePath) -> List[Session]:
         for row in csvReader:
             #add row to json array
             if row['Status'] == "CLOSED":
-                s = Session(row['Charging Station ID'], row['Serial'], row['RFID Card'], row['Status'], row['Start'], row['End'], row['Duration'], row['Meter at start (Wh)'], row['Meter at end (Wh)'], row['Consumption'])
+                s = Session(row['Charging Station ID'], row['Serial'], row['RFID Card'], row['Status'], row['Start'], row['End'], row['Duration (s)'], row['Meter at start (Wh)'], row['Meter at end (Wh)'], row['Consumption (kWh)'])
                 sessions.append(s)
     return sessions
 
