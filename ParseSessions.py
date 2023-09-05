@@ -4,6 +4,7 @@ import locale
 import time
 import requests
 import os
+import nextcloud_client
 from dotenv import load_dotenv
 from typing import List
 from session import Session
@@ -34,6 +35,8 @@ def main():
         f.write(html)
 
     print(f'Data saved to {file_path}')
+
+    upload_file(file_path, '{}/{}'.format(os.environ.get('nextcloud_remote_dir'), file_name))
 
 def date_filter(x: Session):
     return x.end.year == prev_month().year and x.end.month == prev_month().month
@@ -98,6 +101,14 @@ def parse_csv(csvFilePath: str) -> List[Session]:
         ]
 
     return sessions
+
+def upload_file(local_file: str, remote_file: str):
+    nc = nextcloud_client.Client(os.environ.get('nextcloud_url'))
+    nc.login(os.environ.get('nextcloud_user'), os.environ.get('nextcloud_password'))
+
+    nc.put_file(remote_file, local_file)
+
+    print(f'Report successfully uploaded to {remote_file}')
 
 if __name__ == "__main__":
     main()
