@@ -19,12 +19,21 @@ def main():
     sessions = list(reversed(sessions))
     consumption = map(lambda x: x.consumption, sessions)
     consumption = sum(consumption)
+    
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('report.html.j2')
     html = template.render(sessions=sessions, date=prev_month(), consumption=consumption, electricity_rate=Decimal(os.environ.get('electricity_rate')), electricity_basic_price=Decimal(os.environ.get('electricity_basic_price')))
 
-    with open('report.html', 'w') as f:
+    folder_path = os.path.join('reports', str(prev_month().year), str(prev_month().month))
+    os.makedirs(folder_path, exist_ok=True)
+
+    file_name = 'Report_{}{}.html'.format(prev_month().year, prev_month().month)
+    file_path = os.path.join(folder_path, file_name)
+
+    with open(file_path, 'w') as f:
         f.write(html)
+
+    print(f'Data saved to {file_path}')
 
 def date_filter(x: Session):
     return x.end.year == prev_month().year and x.end.month == prev_month().month
