@@ -4,6 +4,4 @@
 
 cd "$1"
 
-pipenv shell
-
-python ParseSessions.py
+pipenv run python ParseSessions.py
